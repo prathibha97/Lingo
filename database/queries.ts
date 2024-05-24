@@ -54,6 +54,10 @@ export const getUnits = cache(async () => {
 
   const normalizedData = data.map((unit) => {
     const lessonsWithCompletedStatus = unit.lessons.map((lesson) => {
+      if (lesson.challenges.length === 0) {
+        return { ...lesson, completed: false };
+      }
+
       const allCompletedChallenged = lesson.challenges.every((challenge) => {
         return (
           challenge.challengeProgress &&
@@ -78,7 +82,7 @@ export const getCourses = cache(async () => {
 
 /**
  * Asynchronous function to retrieve a course by its ID from the cache.
- * 
+ *
  * @param courseId The ID of the course to retrieve.
  * @returns A promise that resolves to the course data.
  */
@@ -144,7 +148,7 @@ export const getCourseProgress = cache(async () => {
  * Asynchronous function to retrieve a lesson based on the provided ID.
  * If no ID is provided, it retrieves the active lesson ID from the course progress.
  * Utilizes caching for optimized performance.
- * 
+ *
  * @param id Optional parameter for the lesson ID to retrieve.
  * @returns A lesson object with associated challenges and completion status.
  */
@@ -193,11 +197,11 @@ export const getLesson = cache(async (id?: number) => {
 
 /**
  * Calculate the percentage of completed challenges in the active lesson.
- * 
+ *
  * This function retrieves the course progress and active lesson, then calculates the percentage
  * of completed challenges in the lesson. If there is no active lesson or the lesson data is missing,
  * it returns 0 as the percentage.
- * 
+ *
  * @returns {number} The percentage of completed challenges in the active lesson.
  */
 export const getLessonPercentage = cache(async () => {

@@ -2,11 +2,19 @@
 
 import db from '@/database/drizzle';
 import { getCourseById, getUserProgress } from '@/database/queries';
-import { userProgress } from '@/database/schema';
+import { challengeProgress, challenges, userProgress } from '@/database/schema';
 import { auth, currentUser } from '@clerk/nextjs/server';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+/**
+ * Updates or inserts user progress for a given course.
+ *
+ * @param {number} courseId - The ID of the course.
+ * @throws {Error} Throws an error if the user is unauthorized.
+ * @return {Promise<void>} Returns a promise that resolves when the user progress is updated or inserted.
+ */
 export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth();
   const user = await currentUser();
@@ -30,9 +38,9 @@ export const upsertUserProgress = async (courseId: number) => {
       username: user.firstName || 'User',
       userImageSrc: user.imageUrl || '/mascot.svg',
     });
-      revalidatePath('/courses');
-      revalidatePath('/learn');
-      redirect('/learn');
+    revalidatePath('/courses');
+    revalidatePath('/learn');
+    redirect('/learn');
   }
 
   await db.insert(userProgress).values({
@@ -45,4 +53,68 @@ export const upsertUserProgress = async (courseId: number) => {
   revalidatePath('/courses');
   revalidatePath('/learn');
   redirect('/learn');
+};
+
+/**
+ * Reduces the hearts of the user associated with the given challenge ID.
+ *
+ * @param {number} challengeId - The ID of the challenge.
+ * @return {Promise<{ error: string } | void>} Returns an object with an error message if the user is not authorized,
+ * if the user progress is not found, or if the user has no hearts left. Returns nothing if the hearts are successfully reduced.
+ * @throws {Error} Throws an error if the challenge is not found.
+ */
+export const reduceHearts = async (challengeId: number) => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error('Unauthorized');
+  }
+
+  const currentUserProgress = await getUserProgress();
+  // TODO: Get user subscription
+
+  const existingChallengeProgress = await db.query.challengeProgress.findFirst({
+    where: and(
+      eq(challengeProgress.userId, userId),
+      eq(challengeProgress.challengeId, challengeId)
+    ),
+  });
+
+  const isPractice = !!existingChallengeProgress;
+
+  if (isPractice) {
+    return { error: 'practice' };
+  }
+
+  if (!currentUserProgress) {
+    throw new Error('User progress not found');
+  }
+  // TODO: Handle subscription
+
+  const challenge = await db.query.challenges.findFirst({
+    where: eq(challenges.id, challengeId),
+  });
+
+  if (!challenge) {
+    throw new Error('Challenge not found');
+  }
+
+  const lessonId = challenge.lessonId;
+
+  if (currentUserProgress.hearts === 0) {
+    return { error: 'hearts' };
+  }
+
+  await db
+    .update(userProgress)
+    .set({
+      hearts: Math.max(currentUserProgress.hearts - 1, 0),
+    })
+    .where(eq(userProgress.userId, userId));
+
+  revalidatePath('/shop');
+  revalidatePath('/learn');
+  revalidatePath('/quests');
+  revalidatePath('/leaderboard');
+  revalidatePath(`/lesson/${lessonId}`);
 };

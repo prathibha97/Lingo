@@ -9,17 +9,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useExitModal } from '@/store/use-exit-modal';
+import { usePracticeModal } from '@/store/use-practice-modal';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 
-interface ExitModalProps {}
+interface PracticeModalProps {}
 
-const ExitModal: FC<ExitModalProps> = ({}) => {
+export const PracticeModal: FC<PracticeModalProps> = ({}) => {
   const router = useRouter();
   const [isClient, setisClient] = useState(false);
-  const { isOpen, close } = useExitModal();
+  const { isOpen, close } = usePracticeModal();
 
   useEffect(() => setisClient(true), []);
 
@@ -31,13 +31,14 @@ const ExitModal: FC<ExitModalProps> = ({}) => {
       <DialogContent className='max-w-md'>
         <DialogHeader>
           <div className='flex items-center w-full justify-center mb-5'>
-            <Image src='/mascot_sad.svg' alt='Mascot' height={80} width={80} />
+            <Image src='/heart.svg' alt='Heart' height={100} width={100} />
           </div>
           <DialogTitle className='text-center font-bold text-2xl'>
-            Wait, dont&apos;t go!
+            Practice Lesson
           </DialogTitle>
           <DialogDescription className='text-center text-base'>
-            You&apos;re about to leave the lesson. Are you sure?
+            Use practice lessons to regain hearts and points. You cannot loose
+            hearts or points in the practice lessons.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className='mb-4'>
@@ -48,18 +49,7 @@ const ExitModal: FC<ExitModalProps> = ({}) => {
               size='lg'
               onClick={close}
             >
-              Keep Learning
-            </Button>
-            <Button
-              className='w-full'
-              variant='dangerOutline'
-              size='lg'
-              onClick={() => {
-                close();
-                router.push('/learn');
-              }}
-            >
-              End Session
+              I understand
             </Button>
           </div>
         </DialogFooter>
@@ -67,5 +57,3 @@ const ExitModal: FC<ExitModalProps> = ({}) => {
     </Dialog>
   );
 };
-
-export default ExitModal;

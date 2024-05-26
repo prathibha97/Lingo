@@ -1,7 +1,11 @@
 'use client';
 import { upsertChallengeProgress } from '@/actions/challenge-progress';
 import { reduceHearts } from '@/actions/user-progress';
-import { challengeOptions, challenges } from '@/database/schema';
+import {
+  challengeOptions,
+  challenges,
+  userSubscription,
+} from '@/database/schema';
 import { useHeartsModal } from '@/store/use-hearts-modal';
 import { usePracticeModal } from '@/store/use-practice-modal';
 import Image from 'next/image';
@@ -24,8 +28,11 @@ interface QuizProps {
     completed: boolean;
     challengeOptions: (typeof challengeOptions.$inferSelect)[];
   })[];
-  // TODO: replace with DB type
-  userSubscription: any;
+  userSubscription:
+    | (typeof userSubscription.$inferSelect & {
+        isActive: boolean;
+      })
+    | null;
 }
 
 export const Quiz: FC<QuizProps> = ({

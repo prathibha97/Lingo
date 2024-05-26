@@ -1,4 +1,8 @@
-import { getLesson, getUserProgress } from '@/database/queries';
+import {
+  getLesson,
+  getUserProgress,
+  getUserSubscription,
+} from '@/database/queries';
 import { redirect } from 'next/navigation';
 import { FC } from 'react';
 import { Quiz } from '../quiz';
@@ -12,10 +16,12 @@ interface LessonIdPageProps {
 const LessonIdPage: FC<LessonIdPageProps> = async ({ params }) => {
   const lessonData = getLesson(params.lessonId);
   const userProgressData = getUserProgress();
+  const userSubscriptionData = getUserSubscription();
 
-  const [lesson, userProgress] = await Promise.all([
+  const [lesson, userProgress, userSubscription] = await Promise.all([
     lessonData,
     userProgressData,
+    userSubscriptionData,
   ]);
 
   if (!lesson || !userProgress) {
@@ -33,7 +39,7 @@ const LessonIdPage: FC<LessonIdPageProps> = async ({ params }) => {
       initialLessonChallenges={lesson.challenges}
       initialHearts={userProgress.hearts}
       initialPercentage={initialPercentage}
-      userSubscription={null} 
+      userSubscription={userSubscription}
     />
   );
 };

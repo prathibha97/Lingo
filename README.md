@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Lingo
 
-## Getting Started
+Lingo is a modern language learning platform designed to provide an interactive and engaging experience for users wanting to learn new languages. The project is built using cutting-edge technologies including Next.js 14, PostgreSQL, Drizzle ORM, TypeScript, Tailwind CSS, and Stripe for payment processing. Admin users have the capability to manage courses, units, lessons, and challenges.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- User-friendly interface for language learning
+- Course management for admin users
+  - Add, update, and delete courses, units, lessons, and challenges
+- Secure payment processing with Stripe
+- Responsive design with Tailwind CSS
+- Type-safe code with TypeScript
+- Data management with PostgreSQL and Drizzle ORM
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Tech Stack
 
-## Learn More
+- **Frontend:** Next.js 14, React, Tailwind CSS
+- **Backend:** Next.js API Routes
+- **Database:** PostgreSQL
+- **ORM:** Drizzle ORM
+- **Language:** TypeScript
+- **Payment Processing:** Stripe
 
-To learn more about Next.js, take a look at the following resources:
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To get a local copy up and running, follow these simple steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/prathibha97/lingo.git
+   cd lingo
 
-## Deploy on Vercel
+2. **Clone the repository:**
+    ```sh
+   git npm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Set up environment variables:**
+    Create a `.env.local` file in the root directory and add the following environment variables:
+    ```sh
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+    CLERK_SECRET_KEY=
+    DRIZZLE_DATABASE_URL=
+    STRIPE_API_KEY=
+    STRIPE_PUBLISHABLE_KEY=
+    STRIPE_WEBHOOK_SECRET=
+    NEXT_PUBLIC_APP_URL=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **Run database migrations:**
+    ```sh
+    npx drizzle-kit push
+
+5. **Start the development server:**
+    ```sh
+    npm run dev
+The app should now be running on http://localhost:3000.
+
+## Usage
+
+Once the server is running, you can access the following features:
+
+- **User Interface:** Interact with language learning courses, complete lessons, and take on challenges.
+- **Admin Interface:** Log in as an admin and navigate to `/admin` to manage courses, units, lessons, and challenges.
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. **Fork the Project**
+2. **Create your Feature Branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit your Changes** (`git commit -m 'Add some AmazingFeature'`)
+4. **Push to the Branch** (`git push origin feature/AmazingFeature`)
+5. **Open a Pull Request**
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
